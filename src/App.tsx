@@ -112,7 +112,7 @@ export default function App() {
               MS Data Science · AI/ML · Software Engineering. Building intelligent systems through data-driven precision and rigorous architecture.
             </p>
             <div className="flex flex-wrap gap-6 pt-4">
-              <a className="bg-primary text-on-primary px-10 py-4 font-headline uppercase text-sm tracking-widest font-bold hover:opacity-90 transition-all" href="#projects">View My Work</a>
+              <a className="bg-primary text-on-primary px-10 py-4 font-headline uppercase text-sm tracking-widest font-bold hover:opacity-90 transition-all" href="https://drive.google.com/file/d/11b7RdNPy8NyIQuGRgAhLUwhX9O5rslwa/view?usp=sharing" target="_blank" rel="noopener noreferrer">Download Resume</a>
               <a className="border border-outline-variant px-10 py-4 font-headline uppercase text-sm tracking-widest font-bold hover:bg-surface-variant transition-all" href="mailto:karthikpachabatla75@gmail.com">Let's Talk</a>
             </div>
             <div className="flex gap-8 pt-12 items-center">
