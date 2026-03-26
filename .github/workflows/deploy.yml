@@ -12,7 +12,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm install
+      - run: rm -f package-lock.json
+      - run: npm install --legacy-peer-deps
       - run: npm run build
       - uses: peaceiris/actions-gh-pages@v3
         with:
