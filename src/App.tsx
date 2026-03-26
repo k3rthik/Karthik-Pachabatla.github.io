@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { 
   Github, 
   Linkedin, 
@@ -15,7 +15,95 @@ import {
   Code, 
   Layers
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, useScroll, useSpring, useInView } from 'motion/react';
+import Lenis from 'lenis';
+
+function ScrollProgressBar() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 right-0 h-[2px] bg-white z-[100] origin-left"
+      style={{ scaleX }}
+    />
+  );
+}
+
+function ScrambleText({ text }: { text: string }) {
+  const [displayText, setDisplayText] = useState(text);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const chars = "!<>-_\\/[]{}—=+*^?#________";
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let iteration = 0;
+    const interval = setInterval(() => {
+      setDisplayText(
+        text.split("").map((char, index) => {
+          if (index < iteration) return text[index];
+          if (char === " ") return " ";
+          return chars[Math.floor(Math.random() * chars.length)];
+        }).join("")
+      );
+
+      if (iteration >= text.length) clearInterval(interval);
+      iteration += 1 / 3;
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [text, isInView]);
+
+  return <span ref={ref}>{displayText}</span>;
+}
+
+function MagneticButton({ children, className, href, target, rel }: any) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+    const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+
+    if (distance < 80) {
+      setPosition({ x: distanceX * 0.3, y: distanceY * 0.3 });
+    } else {
+      setPosition({ x: 0, y: 0 });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      target={target}
+      rel={rel}
+      className={className}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+    >
+      {children}
+    </motion.a>
+  );
+}
 
 function PixelFace() {
   const leftEyeRef = useRef<HTMLDivElement>(null);
@@ -65,6 +153,21 @@ function PixelFace() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const lenis = new Lenis();
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
@@ -74,6 +177,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen selection-primary">
+      <ScrollProgressBar />
       {/* TopNavBar */}
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant shadow-[0_40px_40px_rgba(0,0,0,0.04)]">
         <div className="flex justify-between items-center max-w-7xl mx-auto px-8 h-16">
@@ -395,14 +499,16 @@ export default function App() {
         {/* Contact Section */}
         <section className="py-48 px-8 max-w-7xl mx-auto text-center" id="contact">
           <motion.div className="max-w-3xl mx-auto space-y-12" {...fadeIn}>
-            <h2 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter text-on-surface uppercase">Let's Interface</h2>
+            <h2 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter text-on-surface uppercase">
+              <ScrambleText text="LET'S INTERFACE" />
+            </h2>
             <p className="text-xl text-on-surface-variant leading-relaxed">
               Open to Summer 2026 internships and collaborative research in AI/ML & Data Systems. 
               Let's discuss how data-driven rigor can transform your product.
             </p>
             <div className="flex flex-wrap justify-center gap-6 pt-8">
-              <a className="bg-primary text-on-primary px-12 py-5 font-headline uppercase text-sm tracking-widest font-bold" href="mailto:karthikpachabatla75@gmail.com">Email Directly</a>
-              <a className="border border-outline-variant px-12 py-5 font-headline uppercase text-sm tracking-widest font-bold hover:bg-surface-variant transition-all" href="https://linkedin.com/in/karthik-pachabatla-b01b40212" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a>
+              <MagneticButton className="bg-primary text-on-primary px-12 py-5 font-headline uppercase text-sm tracking-widest font-bold" href="mailto:karthikpachabatla75@gmail.com">Email Directly</MagneticButton>
+              <MagneticButton className="border border-outline-variant px-12 py-5 font-headline uppercase text-sm tracking-widest font-bold hover:bg-surface-variant transition-all" href="https://linkedin.com/in/karthik-pachabatla-b01b40212" target="_blank" rel="noopener noreferrer">LinkedIn Profile</MagneticButton>
             </div>
           </motion.div>
         </section>
