@@ -136,7 +136,7 @@ export default function App() {
         <section className="py-32 px-8 max-w-7xl mx-auto" id="about">
           <motion.div className="grid md:grid-cols-2 gap-20 items-start" {...fadeIn}>
             <div className="space-y-12">
-              <h2 className="font-headline text-4xl font-bold tracking-tighter uppercase text-on-surface">The Cartographer</h2>
+              <h2 className="font-headline text-4xl font-bold tracking-tighter uppercase text-on-surface">DATA SCIENTIST & AI ENGINEER</h2>
               <div className="w-20 h-1 bg-primary"></div>
             </div>
             <div className="space-y-8">
