@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --background: #000000;
+  --surface: #000000;
+  --surface-container: #0d0d0d;
+  --surface-container-low: #000000;
+  --surface-container-high: #0d0d0d;
+  --surface-container-highest: #1a1a1a;
+  --on-surface: #ffffff;
+  --on-surface-variant: #888888;
+  --primary: #ffffff;
+  --on-primary: #000000;
+  --secondary: #888888;
+  --outline-variant: #1a1a1a;
+  --bullet: #555555;
+}
+
+@theme {
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-secondary: var(--secondary);
+  --color-outline-variant: var(--outline-variant);
+  --color-bullet: var(--bullet);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-on-surface font-body antialiased;
+  }
+}
+
+.selection-primary {
+  @apply selection:bg-primary selection:text-on-primary;
+}
